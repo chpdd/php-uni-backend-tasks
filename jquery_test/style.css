@@ -1,0 +1,53 @@
+div.div_anim
+{
+    width: 200px;
+    height: 200px;
+    background-color: #d4d4d7;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+div#divs
+{
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+}
+
+div.div_button
+{
+    user-select: none;
+    border-radius: 5px;
+    background-color: #ffe16f;
+    color: #2d2a2e;
+    padding: 10px;
+    margin: 10px;
+}
+
+div.div_button:hover
+{
+    background-color: #fde1a2;
+}
+div.div_button:active
+{
+    background-color: #fdf3c2;
+}
+
+#stop_button
+{
+    background-color: #ff403c;
+    color: #fbfbfe;
+}
+
+#stop_button:hover
+{
+    background-color: #ff6360;
+}
+
+#stop_button:active
+{
+    background-color: #ffc5c3;
+}
