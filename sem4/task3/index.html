@@ -2,11 +2,10 @@
 <html lang="en">
 
 <head>
-    <script src="calculator.js" defer></script>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="../../style.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="shortcut icon" href="/logo.png" />
+    <link rel="shortcut icon" href="../../logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +15,7 @@
 <body>
 <header>
     <nav class="header-logo">
-        <img class="header-logo" src="/logo.png" alt="Logo">
+        <img class="header-logo" src="../../logo.png" alt="Logo">
     </nav>
     <nav class="header-info">
         <h2 class="header-title">$$$ website?</h2>
@@ -62,17 +61,17 @@
             <div class="div-input">
                 <label id="for-organization" class="black label-center">Пол</label>
                 <div id="sex-radios">
-                    <input value="man" name="sex-man" class="" id="sex-man" type="radio" required>
+                    <input name="sex" class="" id="sex-man" type="radio" value="man" required>
                     <label id="for-sex-man" class="black label-center">Мужской</label>
 
-                    <input value="woman" name="sex-man" class="" id="sex-woman" type="radio" required>
+                    <input name="sex" class="" id="sex-woman" type="radio" value="woman" required>
                     <label id="for-sex-woman" class="black label-center">Женский</label>
                 </div>
             </div>
 
             <div class="div-input">
                 <label id="for-prog-lang" class="black label-center">Любимый язык программирования</label>
-                <select name="abilities[]" multiple="multiple" id="prog-lang" class="size-input" required>
+                <select name="langs[]" multiple="multiple" id="prog-lang" class="size-input" required>
                     <option value="0">Pascal</option>
                     <option value="1">C</option>
                     <option value="2">C++</option>
@@ -89,18 +88,21 @@
 
             <div class="div-input">
                 <label id="for-biography" class="black" for="biography">Биография</label>
-                <textarea class="size-input" id="biography" name="biography"></textarea>
+                <textarea class="size-input" id="biography" name="biography" required></textarea>
             </div>
 
             <div>
-                <input id="contract-checkbox" type="checkbox" name="contract-checkbox" required>
-                <label id="for-contract-checkbox" class="black" for="contract-checkbox">С контрактом ознакомлен</label>
+                <input id="contract" type="checkbox" name="contract" required>
+                <label id="for-contract" class="black" for="contract">С контрактом ознакомлен</label>
             </div>
 
             <div id="div-with-submit">
                 <input id="submit-request" class="div_button" type="submit" value="Сохранить">
             </div>
         </form>
+        <div id="error_handler">
+            <?php include "handler.php"; ?>
+        </div>
     </div>
 </main>
 
