@@ -14,11 +14,11 @@ main {
     justify-content: center;
 }
 
-#contract-checkbox {
+#contract {
     align-self: flex-start;
 }
 
-label#for-contract-checkbox {
+label#for-contract {
     font-size: 12px;
 }
 
