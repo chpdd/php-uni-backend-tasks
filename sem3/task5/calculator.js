@@ -7,10 +7,10 @@ function calculate_price()
     {
         let cost = n * product;
         cost = cost.toFixed(2);
-        document.getElementById("result").textContent = cost + " руб.";
+        document.getElementById("div-result").textContent = cost + " руб.";
     }
     else
     {
-        document.getElementById("result").textContent = "Неправильный формат ввода кол-ва товара";
+        document.getElementById("div-result").textContent = "Неправильный формат ввода кол-ва товара";
     }
 }

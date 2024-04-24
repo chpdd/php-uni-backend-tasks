@@ -10,7 +10,7 @@ div.calculator
     padding: 10px;
 }
 
-div#result
+div#div-result
 {
     background-color: #645b64;
     border-radius: 5px;

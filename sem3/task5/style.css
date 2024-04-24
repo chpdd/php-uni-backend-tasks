@@ -10,7 +10,7 @@ div.calculator {
     min-width: 50%;
 }
 
-div#result {
+div#div-result {
     background-color: #645b64;
     border-radius: 5px;
     padding: 5px;

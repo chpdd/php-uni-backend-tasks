@@ -109,8 +109,12 @@ label#for-contract {
     font-family: "JetBrains Mono";
 }
 
-#if-error {
-    display: none;
+.h1-error {
+    color: #ff403c;
+}
+
+.h1-result {
+    color: #8aff3c;
 }
 
 .user-select-none {

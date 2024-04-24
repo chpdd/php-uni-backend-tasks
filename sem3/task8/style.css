@@ -110,7 +110,7 @@ label#for-contract {
     font-family: "JetBrains Mono";
 }
 
-#if-error {
+#div-result {
     display: none;
 }
 

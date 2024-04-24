@@ -4,7 +4,7 @@ body, html {
     color: #d4d4d7;
     background-color: #2d2a2e;
     font-family: "JetBrains Mono";
-    font-size: 16px;
+    font-size: 20px;
     display: flex;
     flex-direction: column;
 }
@@ -48,7 +48,7 @@ div.tasks {
     border: #ffd866 solid 2px;
     border-radius: 5px;
     padding: 10px;
-    min-width: 60%;
+    min-width: 25%;
 }
 
 footer {
@@ -150,11 +150,10 @@ div.tasks-list {
 }
 
 @media screen and (min-width: 1100px) {
-    body {
-        font-size: 20px;
+    body, html {
+        font-size: 16px;
     }
-
     div.tasks {
-        min-width: 25%;
+        min-width: 60%;
     }
 }
