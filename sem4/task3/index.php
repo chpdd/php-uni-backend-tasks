@@ -23,7 +23,7 @@ function validate_data($data)
 
 function save_to_database($data)
 {
-    include("hid_vars.php");
+    include("../hid_vars.php");
     $db_req = 'mysql:dbname=' . $database . ';host=' . $host;
     try {
         $db = new PDO($db_req, $user, $password,

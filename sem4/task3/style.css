@@ -109,11 +109,11 @@ label#for-contract {
     font-family: "JetBrains Mono";
 }
 
-.h1-error {
+.h2-error {
     color: #ff403c;
 }
 
-.h1-result {
+.h2-result {
     color: #8aff3c;
 }
 
