@@ -9,22 +9,28 @@ function validate_data($data)
 {
     $errors = [];
     $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
-    $symb_patterns = [''];
     $re_patterns = ['fio' => '/^[\w\s]+$/',
         'telephone' => '/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/',
         'email' => '/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/'];
     $size_limits = ['fio' => 255, 'email' => 255, 'biography' => 512];
-    foreach ($all_names as $key) {
-        if (empty($data[$key])) {
-            $errors[] = "Field " . $key . " is empty.";
-        } elseif (in_array($key, array_keys($size_limits))
-            && strlen($data[$key]) > $size_limits[$key]) {
-            $errors[] = "Length of the contents of the field " . $key . " more than " . $size_limits[$key]
-                . " symbols.";
-        } elseif (in_array($key, array_keys($re_patterns)) && !preg_match($re_patterns[$key], $data[$key])) {
-            $errors[] = "Invalid " . $key;
+    foreach ($all_names as $name) {
+        if (empty($data[$name])) {
+            $errors[$name] = "Field {$name} is empty.";
+        } elseif (in_array($name, array_keys($size_limits))
+            && strlen($data[$name]) > $size_limits[$name]) {
+            $errors[$name] = "Length of the contents of the field {$name} more than {$size_limits[$name]} symbols.";
+        } elseif (in_array($name, array_keys($re_patterns))
+            && !preg_match($re_patterns[$name], $data[$name])) {
+            $errors[$name] = "Invalid {$name}.";
+        } elseif ($name == 'bday') {
+            if (!strtotime($data[$name]) ||
+                strtotime('1900-01-01') > strtotime($data[$name]) ||
+                strtotime($data[$name]) > time()) {
+                $errors[$name] = "Invalid {$name}.";
+            }
         }
     }
+
     if (!empty($errors)) {
         setcookie('errors', serialize($errors), 0);
         setcookie('incor_data', serialize($data), 0);

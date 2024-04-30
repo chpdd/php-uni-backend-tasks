@@ -1,9 +1,11 @@
 <?php
-function echo_form($all_names, $fields_data)
+function echo_form($all_names, $fields_data, $errors)
 {
     $classes = [
         'label' => 'black label-center',
-        'input' => 'size-input'
+        'input' => 'size-input',
+        'div' => 'div-input',
+        'div-err' => 'div-input div-error'
     ];
     $label_txt = array_combine($all_names,
         [
@@ -18,7 +20,11 @@ function echo_form($all_names, $fields_data)
 
 
     foreach ($all_names as $name) {
-        echo "<div class='div-input'>";
+        $div_class = 'div';
+        if (in_array($name, array_keys($errors))) {
+            $div_class = 'div-err';
+        }
+        echo "<div class='{$classes[$div_class]}'>";
 
         if ($name == 'sex') {
             $total_label = "<label class='{$classes['label']}'>";
@@ -98,6 +104,7 @@ function echo_form($all_names, $fields_data)
 $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography"];
 $fields_data = array_fill_keys($all_names, "");
 $fields_data['langs'] = [];
+$errors = [];
 if (isset($_GET['errors_flag'])) {
     $errors = unserialize($_COOKIE['errors']);
     $fields_data = unserialize($_COOKIE['incor_data']);
@@ -153,9 +160,9 @@ if (isset($_GET['errors_flag'])) {
     <div class="tasks" id="div_form">
         <form method="post" id="form">
             <h1 id="h1-form" class="black">Форма</h1>
-            <?php if (isset($errors)): ?>
+            <?php if (!empty($errors)): ?>
                 <div class="div-result">
-                    <?php foreach ($errors as $val): ?>
+                    <?php foreach ($errors as $key => $val): ?>
                         <div class="error-color label-center">
                             <?php echo $val; ?>
                         </div>
@@ -166,7 +173,7 @@ if (isset($_GET['errors_flag'])) {
                     <p class="success-color">Данные успешно сохранены, спасибо!</p>
                 </div>
             <?php endif; ?>
-            <?php echo_form($all_names, $fields_data); ?>
+            <?php echo_form($all_names, $fields_data, $errors); ?>
             <div class="label-center">
                 <input id="contract" type="checkbox" name="contract" value="1">
                 <label id="for-contract" class="black" for="contract">С контрактом ознакомлен</label>
