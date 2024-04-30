@@ -1,10 +1,122 @@
+<?php
+function echo_form($all_names, $fields_data)
+{
+    $classes = [
+        'label' => 'black label-center',
+        'input' => 'size-input'
+    ];
+    $label_txt = array_combine($all_names,
+        [
+            'ФИО',
+            'Телефон',
+            'Email',
+            'Дата рождения',
+            'Пол',
+            'Любимый язык программирования',
+            'Биография'
+        ]);
+    foreach ($all_names as $name) {
+        echo "<div class='div-input'>";
+        if ($name == 'sex') {
+            $total_label = "<label class='{$classes['label']}'>";
+            $total_label .= "{$label_txt[$name]}</label>";
+            echo $total_label;
+            echo "<div id='sex-radios' class='label-center'>";
+            foreach (['man' => 'Мужской', 'woman' => 'Женский'] as $sex => $txt) {
+                $input_str = "<input name='{$name}' value='{$sex}' type='radio'";
+                if ($sex == $fields_data['sex']) {
+                    $input_str .= "selected";
+                }
+                $input_str .= ">";
+                $label_str = "<label class='{$classes['label']}'>";
+                $label_str .= "{$txt}</label>";
+                echo $input_str;
+                echo $label_str;
+            }
+            echo "</div>";
+        } elseif ($name == 'langs') {
+            $label_str = "<label class='{$classes['label']}'>";
+            $label_str .= "{$label_txt[$name]}</label>";
+            echo $label_str;
+            $select_str = "<select name='{$name}[]' class='{$classes['input']}' multiple id='prog-lang'>";
+            echo $select_str;
+            $lang_names = [
+                "Pascal",
+                "C",
+                "C++",
+                "JavaScript",
+                "PHP",
+                "Python",
+                "Java",
+                "Haskel",
+                "Clojure",
+                "Prolog",
+                "Scala"
+            ];
+            for ($i = 0; $i < count($lang_names); $i += 1) {
+                $option_str = "<option value='{$i}'";
+                if (in_array($lang_names[$i], $fields_data[$name])) {
+                    $option_str .= "selected";
+                }
+                $option_str .= ">{$lang_names[$i]}</option>";
+                echo $option_str;
+            }
+            echo "</select>";
+        } elseif ($name == 'biography') {
+            $label_str = "<label class='{$classes["label"]}' for='{$name}'>";
+            $label_str .= "{$label_txt[$name]}</label>";
+            $textarea_str = "<textarea name='{$name}' class='{$classes['input']}'>";
+            $textarea_str .= "{$fields_data[$name]}</textarea>";
+            echo $label_str;
+            echo $textarea_str;
+        } else {
+            $label_str = "<label class='{$classes["label"]}' for='{$name}'>";
+            $label_str .= "{$label_txt[$name]}</label>";
+            $input_str = "<input value='{$fields_data[$name]}' name='{$name}' class='{$classes['input']}'";
+            if ($name == 'bday') {
+                $input_str .= "type='date'";
+            }
+            $input_str .= ">";
+            echo $label_str;
+            echo $input_str;
+        }
+        echo "</div>";
+    }
+}
+
+$all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography"];
+$fields_data = array_fill_keys($all_names, "");
+$fields_data['langs'] = [];
+if (isset($_GET['errors_flag'])) {
+    $errors = unserialize($_COOKIE['errors']);
+    unset($_COOKIE['errors']);
+    $fields_data = unserialize($_COOKIE['incor_data']);
+} else {
+    if (isset($_GET['success_flag'])) {
+        $success_flag = true;
+    }
+    if (isset($_COOKIE['last_cor_data'])) {
+        $fields_data = unserialize($_COOKIE['last_cor_data']);
+    }
+}
+foreach ($fields_data as $key => $val) {
+    if (gettype($val) == gettype([])) {
+        print($key . ":");
+        foreach ($val as $x) {
+            print($x . " ");
+        }
+    } else {
+        print($key . "=" . $val);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <script src="../../jquery.js" defer></script>
-    <script src="scripts.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../../style.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="shortcut icon" href="../../logo.png"/>
@@ -12,7 +124,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap"
           rel="stylesheet">
-    <title>Задание 3</title>
+    <title>Задание 4</title>
 </head>
 
 <body>
@@ -22,7 +134,7 @@
     </nav>
     <nav class="header-info">
         <h2 class="header-title">$$$ website?</h2>
-        <h3 class="header-task">Задание 3</h3>
+        <h3 class="header-task">Задание 4</h3>
     </nav>
 
 </header>
@@ -47,66 +159,10 @@
                 </div>
             <?php elseif (isset($success_flag)): ?>
                 <div class="div-result">
-                    <p class="result-color">Данные успешно сохранены, спасибо!</p>
+                    <p class="success-color">Данные успешно сохранены, спасибо!</p>
                 </div>
-            <?php if (isset($_COOKIE['result'])): ?>
-                $result = $_COOKIE['result'];
-            <div class="div-input">
-                <label id="for-fio" class="black label-center" for="fio">ФИО</label>
-                <input value=<?php echo $_COOKIE['fio']?> name="fio" class="size-input" id="fio" type="text">
-            </div>
-
-            <div class="div-input">
-                <label id="for-telephone" class="black label-center" for="telephone">Телефон</label>
-                <input name="telephone" class="size-input" id="telephone" type="tel">
-            </div>
-
-            <div class="div-input">
-                <label id="for-email" class="black label-center" for="email">Email</label>
-                <input name="email" class="size-input" id="email" type="email">
-            </div>
-
-            <div class="div-input">
-                <label id="for-bday" class="black label-center" for="bday">Дата рождения</label>
-                <input name="bday" class="size-input" id="bday" type="date" min='1900-01-01'>
-                <script>
-                    document.getElementById('bday').max = new Date().toISOString().split('T')[0];
-                </script>
-            </div>
-
-            <div class="div-input">
-                <label id="for-organization" class="black label-center">Пол</label>
-                <div id="sex-radios" class="label-center">
-                    <input name="sex" class="" id="sex-man" type="radio" value="man">
-                    <label id="for-sex-man" class="black label-center">Мужской</label>
-
-                    <input name="sex" class="" id="sex-woman" type="radio" value="woman">
-                    <label id="for-sex-woman" class="black label-center">Женский</label>
-                </div>
-            </div>
-
-            <div class="div-input">
-                <label id="for-prog-lang" class="black label-center">Любимый язык программирования</label>
-                <select name="langs[]" multiple="multiple" id="prog-lang" class="size-input">
-                    <option value="0">Pascal</option>
-                    <option value="1">C</option>
-                    <option value="2">C++</option>
-                    <option value="3">JavaScript</option>
-                    <option value="4">PHP</option>
-                    <option value="5">Python</option>
-                    <option value="6">Java</option>
-                    <option value="7">Haskel</option>
-                    <option value="8">Clojure</option>
-                    <option value="9">Prolog</option>
-                    <option value="10">Scala</option>
-                </select>
-            </div>
-
-            <div class="div-input">
-                <label id="for-biography" class="black label-center" for="biography">Биография</label>
-                <textarea class="size-input" id="biography" name="biography"></textarea>
-            </div>
-
+            <?php endif; ?>
+            <?php echo_form($all_names, $fields_data); ?>
             <div class="label-center">
                 <input id="contract" type="checkbox" name="contract" value="1">
                 <label id="for-contract" class="black" for="contract">С контрактом ознакомлен</label>

@@ -4,6 +4,7 @@ function print_error($error)
     print($error);
     exit();
 }
+
 function validate_data($data)
 {
     $errors = [];
@@ -28,8 +29,8 @@ function validate_data($data)
     }
     if (!empty($errors)) {
         setcookie('errors', serialize($errors), 0);
+        setcookie('incor_data', serialize($data), 0);
         header('Location: ' . parse_url($_SERVER['REQUEST_URI'])['path'] . '?errors_flag=true');
-//        exit();
     }
 }
 
@@ -67,25 +68,24 @@ function save_to_database($data)
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['errors_flag'])) {
-        $errors = unserialize($_COOKIE['errors']);
-        unset($_COOKIE['errors']);
-    } elseif (isset($_COOKIE['result'])) {
-        $result = unserialize($_COOKIE['result']);
-    } elseif (isset($_GET['success_flag'])) {
-        $success_flag = true;
-    }
     include('body.php');
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $form_data = $_POST;
-//foreach ($form_data as $key => $val)
-//{
-//    print($key . " = '" . $val . "' empty = " . isset($val) . " ");
-//}
+    $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
+    $form_data = array_fill_keys($all_names, "");
+//    foreach ($form_data as $key => $val)
+//    {
+//        print($key . " " . $val);
+//    }
+//    exit();
+    $form_data['langs'] = [];
+    foreach ($_POST as $key => $val) {
+        $form_data[$key] = $val;
+    }
     validate_data($form_data);
     save_to_database($form_data);
-    setcookie('result', serialize($form_data), 3600 * 24 * 365);
+    unset($_COOKIE['last_cor_data']);
+    setcookie('last_cor_data', serialize($form_data), 3600 * 24 * 365);
     header('Location: ' . parse_url($_SERVER['REQUEST_URI'])['path'] . '?success_flag=true');
 }
 
