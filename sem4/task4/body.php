@@ -15,8 +15,11 @@ function echo_form($all_names, $fields_data)
             'Любимый язык программирования',
             'Биография'
         ]);
+
+
     foreach ($all_names as $name) {
         echo "<div class='div-input'>";
+
         if ($name == 'sex') {
             $total_label = "<label class='{$classes['label']}'>";
             $total_label .= "{$label_txt[$name]}</label>";
@@ -25,7 +28,7 @@ function echo_form($all_names, $fields_data)
             foreach (['man' => 'Мужской', 'woman' => 'Женский'] as $sex => $txt) {
                 $input_str = "<input name='{$name}' value='{$sex}' type='radio'";
                 if ($sex == $fields_data['sex']) {
-                    $input_str .= "selected";
+                    $input_str .= "checked";
                 }
                 $input_str .= ">";
                 $label_str = "<label class='{$classes['label']}'>";
@@ -34,6 +37,8 @@ function echo_form($all_names, $fields_data)
                 echo $label_str;
             }
             echo "</div>";
+
+
         } elseif ($name == 'langs') {
             $label_str = "<label class='{$classes['label']}'>";
             $label_str .= "{$label_txt[$name]}</label>";
@@ -55,13 +60,15 @@ function echo_form($all_names, $fields_data)
             ];
             for ($i = 0; $i < count($lang_names); $i += 1) {
                 $option_str = "<option value='{$i}'";
-                if (in_array($lang_names[$i], $fields_data[$name])) {
+                if (in_array($i, $fields_data[$name])) {
                     $option_str .= "selected";
                 }
                 $option_str .= ">{$lang_names[$i]}</option>";
                 echo $option_str;
             }
             echo "</select>";
+
+
         } elseif ($name == 'biography') {
             $label_str = "<label class='{$classes["label"]}' for='{$name}'>";
             $label_str .= "{$label_txt[$name]}</label>";
@@ -69,6 +76,8 @@ function echo_form($all_names, $fields_data)
             $textarea_str .= "{$fields_data[$name]}</textarea>";
             echo $label_str;
             echo $textarea_str;
+
+
         } else {
             $label_str = "<label class='{$classes["label"]}' for='{$name}'>";
             $label_str .= "{$label_txt[$name]}</label>";
@@ -80,33 +89,28 @@ function echo_form($all_names, $fields_data)
             echo $label_str;
             echo $input_str;
         }
+
         echo "</div>";
     }
 }
+
 
 $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography"];
 $fields_data = array_fill_keys($all_names, "");
 $fields_data['langs'] = [];
 if (isset($_GET['errors_flag'])) {
     $errors = unserialize($_COOKIE['errors']);
-    unset($_COOKIE['errors']);
     $fields_data = unserialize($_COOKIE['incor_data']);
+//    foreach (unserialize($_COOKIE['incor_data'])['langs'] as $lang)
+//    {
+//        print($lang . " ");
+//    }
 } else {
     if (isset($_GET['success_flag'])) {
         $success_flag = true;
     }
-    if (isset($_COOKIE['last_cor_data'])) {
-        $fields_data = unserialize($_COOKIE['last_cor_data']);
-    }
-}
-foreach ($fields_data as $key => $val) {
-    if (gettype($val) == gettype([])) {
-        print($key . ":");
-        foreach ($val as $x) {
-            print($x . " ");
-        }
-    } else {
-        print($key . "=" . $val);
+    if (isset($_COOKIE['cor_data'])) {
+        $fields_data = unserialize($_COOKIE['cor_data']);
     }
 }
 ?>
@@ -151,7 +155,7 @@ foreach ($fields_data as $key => $val) {
             <h1 id="h1-form" class="black">Форма</h1>
             <?php if (isset($errors)): ?>
                 <div class="div-result">
-                    <?php foreach ($errors as $key => $val): ?>
+                    <?php foreach ($errors as $val): ?>
                         <div class="error-color label-center">
                             <?php echo $val; ?>
                         </div>

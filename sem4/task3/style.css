@@ -109,6 +109,10 @@ label#for-contract {
     font-family: "JetBrains Mono";
 }
 
+.incor-field {
+    border: #ff403c solid 2px;
+}
+
 .h2-error {
     color: #ff403c;
 }

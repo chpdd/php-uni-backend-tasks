@@ -16,28 +16,27 @@ function validate_data($data)
     $size_limits = ['fio' => 255, 'email' => 255, 'biography' => 512];
     foreach ($all_names as $key) {
         if (empty($data[$key])) {
-            $errors[$key] = "Field " . $key . " is empty.";
-            continue;
+            $errors[] = "Field " . $key . " is empty.";
         } elseif (in_array($key, array_keys($size_limits))
             && strlen($data[$key]) > $size_limits[$key]) {
-            $errors[$key] = "Length of the contents of the field " . $key . " more than " . $size_limits[$key]
+            $errors[] = "Length of the contents of the field " . $key . " more than " . $size_limits[$key]
                 . " symbols.";
-            continue;
         } elseif (in_array($key, array_keys($re_patterns)) && !preg_match($re_patterns[$key], $data[$key])) {
-            $errors[$key] = "Invalid " . $key;
+            $errors[] = "Invalid " . $key;
         }
     }
     if (!empty($errors)) {
         setcookie('errors', serialize($errors), 0);
         setcookie('incor_data', serialize($data), 0);
-        header('Location: ' . parse_url($_SERVER['REQUEST_URI'])['path'] . '?errors_flag=true');
+        header("Location:" . parse_url($_SERVER['REQUEST_URI'])['path'] . "?errors_flag=true");
+        exit();
     }
 }
 
 function save_to_database($data)
 {
     include("../hid_vars.php");
-    $db_req = 'mysql:dbname=' . $database . ';host=' . $host;
+    $db_req = "mysql:dbname={$database};host={$host}";
     try {
         $db = new PDO($db_req, $user, $password,
             [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
@@ -73,20 +72,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
     $form_data = array_fill_keys($all_names, "");
-//    foreach ($form_data as $key => $val)
-//    {
-//        print($key . " " . $val);
-//    }
-//    exit();
     $form_data['langs'] = [];
     foreach ($_POST as $key => $val) {
-        $form_data[$key] = $val;
+        if (!empty($val)) {
+            $form_data[$key] = $val;
+        }
     }
+//    foreach ($form_data as $key => $val) {
+//        if (gettype($val) == gettype([])) {
+//            print($key . ":");
+//            foreach ($val as $v) {
+//                print("{$v} ");
+//            }
+//        }
+//        else {
+//            print("{$key}={$val}|empty=" . empty($val) . " ");
+//        }
+//    }
+//    exit();
     validate_data($form_data);
     save_to_database($form_data);
-    unset($_COOKIE['last_cor_data']);
-    setcookie('last_cor_data', serialize($form_data), 3600 * 24 * 365);
-    header('Location: ' . parse_url($_SERVER['REQUEST_URI'])['path'] . '?success_flag=true');
+    setcookie('cor_data', serialize($form_data), time() + 3600 * 24 * 365);
+    header("Location:" . parse_url($_SERVER['REQUEST_URI'])['path'] . "?success_flag=true");
 }
 
 
