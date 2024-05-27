@@ -25,15 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     validate_data($fields_data);
 
-    if (empty($errors)) {
-        session_start();
-        $login = "user_" . random_int(0, 99999);
-        $password = generate_password();
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        save_to_database($fields_data);
-        save_user($login, $password_hash);
-        //здесь надо сделать пересылку куда-то и там проверка на авторизацию
-    }
+    session_start();
+    $login = "user_" . random_int(0, 99999);
+    $password = generate_password();
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    save_to_database($fields_data);
+    save_user($login, $password_hash);
+    //здесь надо сделать пересылку куда-то и там проверка на авторизацию
 }
 ?>
 
@@ -83,4 +81,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </footer>
 </body>
 
-</html>>
+</html>

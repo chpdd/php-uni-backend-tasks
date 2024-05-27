@@ -199,6 +199,29 @@ function save_user($login, $password_hash)
         $last_app_id = $db->lastInsertId();
         $users_req = "INSERT INTO users (login, password_hash, application_id)";
         $users_req = $users_req . " VALUES ({$login}, {$password_hash}, {$last_app_id});";
+        $users_stmt = $db->prepare($users_req);
+        $users_stmt->execute();
+    } catch (PDOException $e) {
+        print_error($e->getMessage());
+    }
+}
+
+function user_in_db($login, $password_hash)
+{
+    include("../hid_vars.php");
+    $db_req = "mysql:dbname={$database};host={$host}";
+    try {
+        $db = new PDO($db_req, $user, $password,
+            [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $find_user_req = 'SELECT * FROM users WHERE login = {$login} AND password_hash = {$password_hash};';
+        $find_user_stmt = $db->prepare($find_user_req);
+        $result = $find_user_stmt->execute();
+        if ($result) {
+            return True;
+        }
+        else {
+            return False;
+        }
     } catch (PDOException $e) {
         print_error($e->getMessage());
     }

@@ -1,3 +1,18 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['registration'])) {
+    include("registration.php");
+    exit();
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['authorization'])) {
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+    if (user_in_db($login, $password)) {
+        session_start();
+        include("edit.php");
+        exit();
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,18 +49,28 @@
 </aside>
 
 <main>
-    <div class="tasks" id="div_form">
-
+    <div class="tasks">
+        <h1>Авторизация</h1>
+        <form name="login-form" id="login-form" method="post">
+            <div class="div-input">
+                <label id="for-login" class="black label-center" for="login">Логин</label>
+                <input name="login" class="size-input" id="login" type="text" required>
+            </div>
+            <div class="div-input">
+                <label id="for-password" class="black label-center" for="password">Пароль</label>
+                <input name="password" class="size-input" id="password" type="password" required>
+            </div>
+            <div class="div-input">
+                <button name="authorization" value="True">Войти</button>
+            </div>
+        </form>
+        <h2>Регистрация</h2>
+        <form name="registration-form" id="registration-form" method="get">
+            <div class="div-input">
+                <button name="registration" value="True">Зарегистрироваться</button>
+            </div>
+        </form>
     </div>
-</main>
-
-<footer>
-    <p class=" text_in_footer">created by</p>
-    <h3 class=" text_in_footer">Денис Чупилко</h3>
-</footer>
-</body>
-
-</html>>
 </main>
 
 <footer>
