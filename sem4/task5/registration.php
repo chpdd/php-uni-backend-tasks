@@ -1,37 +1,20 @@
 <?php
 $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography"];
-$fields_data = array_fill_keys($all_names, "");
-$fields_data['langs'] = [];
 $errors = [];
 if (isset($_GET['errors_flag'])) {
     $errors = unserialize($_COOKIE['errors']);
     $fields_data = unserialize($_COOKIE['incor_data']);
-//    foreach (unserialize($_COOKIE['incor_data'])['langs'] as $lang)
-//    {
-//        print($lang . " ");
-//    }
-} else {
-    if (isset($_GET['success_flag'])) {
-        $success_flag = true;
-    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    foreach ($all_names as $name) {
-        if (isset($_POST[$name])) {
-            $fields_data[$name] = $_POST[$name];
+foreach ($all_names as $name) {
+    if (!isset($fields_data[$name])) {
+        if ($name == "langs") {
+            $fields_data['langs'] = [];
+        }
+        else {
+            $fields_data[$name] = "";
         }
     }
-
-    validate_data($fields_data);
-
-    session_start();
-    $login = "user_" . random_int(0, 99999);
-    $password = generate_password();
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    save_to_database($fields_data);
-    save_user($login, $password_hash);
-    //здесь надо сделать пересылку куда-то и там проверка на авторизацию
 }
 ?>
 
@@ -72,7 +55,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </aside>
 
 <main>
-    <?php draw_form($all_names, $fields_data, $errors); ?>
+    <div class="tasks" id="div_form">
+        <form method="post" id="form">
+            <h1 id="h1-form" class="black">Форма</h1>
+            <?php if (!empty($errors)): ?>
+                <div class="div-result">
+                    <?php foreach ($errors as $key => $val): ?>
+                        <div class="error-color label-center">
+                            <?php echo $val; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <?php echo_form($all_names, $fields_data, $errors); ?>
+            <div class="label-center">
+                <input id="contract" type="checkbox" name="contract" value="1">
+                <label id="for-contract" class="black" for="contract">С контрактом ознакомлен</label>
+            </div>
+
+            <div class="div-input">
+                <button name="registration_form" value="True">Отправить</button>
+            </div>
+        </form>
+    </div>
 </main>
 
 <footer>

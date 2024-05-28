@@ -1,16 +1,8 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['registration'])) {
-    include("registration.php");
-    exit();
-}
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['authorization'])) {
-    $login = $_POST['login'];
-    $password = $_POST['password'];
-    if (user_in_db($login, $password)) {
-        session_start();
-        include("edit.php");
-        exit();
-    }
+$authorization_errors = [];
+if (isset($_GET['error_authorization_flag'])) {
+    $error_authorization_flag = true;
+    $authorization_errors = unserialize($_COOKIE['authorization_errors']);
 }
 ?>
 
@@ -51,14 +43,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['authorization'])) {
 <main>
     <div class="tasks">
         <h1>Авторизация</h1>
+        <?php if (isset($error_authorization_flag)): ?>
+            <div class="div-result">
+                <?php foreach ($authorization_errors as $key => $val): ?>
+                    <div class="error-color label-center">
+                        <?php echo $val; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
         <form name="login-form" id="login-form" method="post">
             <div class="div-input">
                 <label id="for-login" class="black label-center" for="login">Логин</label>
-                <input name="login" class="size-input" id="login" type="text" required>
+                <input name="login" class="size-input" id="login" type="text">
             </div>
             <div class="div-input">
                 <label id="for-password" class="black label-center" for="password">Пароль</label>
-                <input name="password" class="size-input" id="password" type="password" required>
+                <input name="password" class="size-input" id="password" type="password">
             </div>
             <div class="div-input">
                 <button name="authorization" value="True">Войти</button>

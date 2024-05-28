@@ -26,7 +26,7 @@ function save_to_database($data)
     include("../hid_vars.php");
     $db_req = 'mysql:dbname=' . $database . ';host=' . $host;
     try {
-        $db = new PDO($db_req, $user, $password,
+        $db = new PDO($db_req, $db_user, $db_password,
             [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         $names_data_for_app = ['fio', 'telephone', 'email', 'bday', 'sex', 'biography'];
         $app_req = "INSERT INTO application (" . implode(', ', $names_data_for_app) .
