@@ -1,30 +1,27 @@
 <?php
+$ed_login = $_SESSION['login'];
+$ed_password = $_SESSION['password'];
 $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography"];
-$fields_data = array_fill_keys($all_names, "");
-$fields_data['langs'] = [];
 $errors = [];
 if (isset($_GET['errors_flag'])) {
     $errors = unserialize($_COOKIE['errors']);
     $fields_data = unserialize($_COOKIE['incor_data']);
-//    foreach (unserialize($_COOKIE['incor_data'])['langs'] as $lang)
-//    {
-//        print($lang . " ");
-//    }
 } else {
-    if (isset($_GET['success_flag'])) {
-        $success_flag = true;
-    }
+    $fields_data = get_user_fields_data($ed_login);
 }
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    foreach ($all_names as $name) {
-        if (isset($_POST[$name])) {
-            $fields_data[$name] = $_POST[$name];
+if (isset($_GET['registration_flag'])) {
+    $registration_flag = true;
+} elseif (isset($_GET['success_flag'])) {
+    $success_flag = true;
+}
+foreach ($all_names as $name) {
+    if (!isset($fields_data[$name])) {
+        if ($name == "langs") {
+            $fields_data['langs'] = [];
+        } else {
+            $fields_data[$name] = "";
         }
     }
-
-    validate_data($fields_data);
-
 }
 ?>
 
@@ -65,7 +62,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </aside>
 
 <main>
-    <?php draw_form($all_names, $fields_data, $errors); ?>
+    <div class="tasks" id="div_form">
+        <form method="post" id="form">
+            <h2 id="h1-form" class="black">Редактировать форму</h2>
+            <div class="div-input">
+                Пользователь:
+                <?php echo $ed_login ?>
+            </div>
+            <?php if (!empty($errors)): ?>
+                <div class="div-result">
+                    <?php foreach ($errors as $key => $val): ?>
+                        <div class="error-color label-center">
+                            <?php echo $val; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php elseif (isset($success_flag)): ?>
+                <div class="div-result">
+                    <p class="success-color">Данные успешно изменены, спасибо!</p>
+                </div>
+            <?php elseif (isset($registration_flag)): ?>
+                <div class="div-result">
+                    <p class="success-color">
+                        Вы успешно зарегистрировались под
+                        <br>
+                        <?php echo " логином: {$ed_login}" ?>
+                        <br>
+                        <?php echo "и паролем: {$ed_password}" ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+            <?php echo_form($all_names, $fields_data, $errors); ?>
+            <div class="label-center">
+                <input id="contract" type="checkbox" name="contract" value="1">
+                <label id="for-contract" class="black" for="contract">С контрактом ознакомлен</label>
+            </div>
+
+            <div class="div-input">
+                <button name="authorization_form" value="True">Отправить</button>
+            </div>
+        </form>
+    </div>
 </main>
 
 <footer>
@@ -74,4 +111,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </footer>
 </body>
 
-</html>>
+</html>
