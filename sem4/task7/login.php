@@ -19,7 +19,7 @@ if (isset($_GET['error_authorization_flag'])) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>Задание 6</title>
+    <title>Задание 7</title>
 </head>
 
 <body>
@@ -29,7 +29,7 @@ if (isset($_GET['error_authorization_flag'])) {
     </nav>
     <nav class="header-info">
         <h2 class="header-title">$$$ website?</h2>
-        <h3 class="header-task">Задание 6</h3>
+        <h3 class="header-task">Задание 7</h3>
     </nav>
 
 </header>

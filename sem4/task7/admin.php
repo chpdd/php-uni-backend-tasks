@@ -18,7 +18,7 @@ $prog_langs_statistic = get_prog_langs_statistic();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap"
           rel="stylesheet">
-    <title>Задание 6</title>
+    <title>Задание 7</title>
 </head>
 
 <body>
@@ -43,8 +43,13 @@ $prog_langs_statistic = get_prog_langs_statistic();
     <div class="tasks">
         <h1>Список пользователей</h1>
         <div class="div-input">
-            Админ:
-            <?php echo $admin_login ?>
+            <form>
+                Ваш логин:
+                <?php echo $admin_login ?>
+                <div class="div-input">
+                    <button name="quit_admin" value="True">Выйти из аккаунта</button>
+                </div>
+            </form>
         </div>
         <?php
         foreach ($users as $user) {
