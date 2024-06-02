@@ -46,9 +46,6 @@ $prog_langs_statistic = get_prog_langs_statistic();
             <form>
                 Ваш логин:
                 <?php echo $admin_login ?>
-                <div class="div-input">
-                    <button name="quit_admin" value="True">Выйти из аккаунта</button>
-                </div>
             </form>
         </div>
         <?php

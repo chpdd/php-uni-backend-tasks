@@ -8,8 +8,10 @@ function print_error($error)
 function validate_data($data)
 {
     $errors = [];
+    $all_langs = range(0, 10);
+    $all_sexs = ['man', 'woman'];
     $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
-    $re_patterns = ['fio' => '/^[\w\s]+$/',
+    $re_patterns = ['fio' => '/^[\w\sА-Яа-яЁё]+$/',
         'telephone' => '/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/',
         'email' => '/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/'];
     $size_limits = ['fio' => 255, 'email' => 255, 'biography' => 512];
@@ -27,6 +29,16 @@ function validate_data($data)
                 strtotime('1900-01-01') > strtotime($data[$name]) ||
                 strtotime($data[$name]) > time()) {
                 $errors[$name] = "Invalid {$name}.";
+            }
+        } elseif ($name == 'langs') {
+            foreach ($data['langs'] as $lang) {
+                if (!in_array($lang, $all_langs)) {
+                    $errors[$name] = "Invalid langs";
+                }
+            }
+        } elseif ($name == 'sex') {
+            if (!in_array($data['sex'], $all_sexs)) {
+                $errors[$name] = 'Invalid sex';
             }
         }
     }
