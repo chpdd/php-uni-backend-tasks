@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $_SESSION['admin_password'] = $admin_password;
             $_SESSION['admin_session'] = true;
             include("admin.php");
+        } else {
+            authenticate();
         }
     } elseif (isset($_SESSION['session_active'])) {
         include("edit.php");
