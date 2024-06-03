@@ -45,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!empty($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    if (!empty($_POST['csrf_token']) &&
+        hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
         if (isset($_POST['admin_edit_form'])) {
             $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
 
