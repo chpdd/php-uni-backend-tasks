@@ -123,7 +123,7 @@ function validate_data($data)
     $all_langs = range(0, 10);
     $all_sexs = ['man', 'woman'];
     $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
-    $re_patterns = ['fio' => '/^[\w\sА-Яа-яЁё]+$/',
+    $re_patterns = ['fio' => '/^[\w\sА-Яа-яЁё]+$/u',
         'telephone' => '/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/',
         'email' => '/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/'];
     $size_limits = ['fio' => 255, 'email' => 255, 'biography' => 512];
@@ -197,7 +197,6 @@ function save_to_database($data, $login, $password_hash) {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
 
-        // Вставка данных в таблицу application
         $app_req = "INSERT INTO application (fio, telephone, email, bday, sex, biography) VALUES (:fio, :telephone, :email, :bday, :sex, :biography)";
         $app_stmt = $db->prepare($app_req);
         $app_stmt->execute([
@@ -215,7 +214,6 @@ function save_to_database($data, $login, $password_hash) {
         $password = generate_password();
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-        // Вставка данных в таблицу app_link_lang
         $link_req = "INSERT INTO app_link_lang (id_app, id_prog_lang) VALUES (:id_app, :id_prog_lang)";
         $link_stmt = $db->prepare($link_req);
         foreach ($data['langs'] as $lang) {
@@ -225,7 +223,6 @@ function save_to_database($data, $login, $password_hash) {
             ]);
         }
 
-        // Вставка данных в таблицу users
         $users_req = "INSERT INTO users (login, password_hash, application_id) VALUES (:login, :password_hash, :application_id)";
         $users_stmt = $db->prepare($users_req);
         $users_stmt->execute([
@@ -278,7 +275,6 @@ function admin_in_db($login, $password) {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
 
-        // Подготовленный запрос для выборки из базы данных
         $find_admin_req = "SELECT * FROM admins WHERE login = :login";
         $find_admin_stmt = $db->prepare($find_admin_req);
         $find_admin_stmt->execute([':login' => $login]);
@@ -313,13 +309,11 @@ function get_user_fields_data($login) {
 
         $id_app = (int)substr($login, strpos($login, '_') + 1);
 
-        // Подготовленный запрос для выборки из таблицы application
         $get_data_req = "SELECT * FROM application WHERE id_app = :id_app";
         $get_data_stmt = $db->prepare($get_data_req);
         $get_data_stmt->execute([':id_app' => $id_app]);
         $result = $get_data_stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Подготовленный запрос для выборки из таблицы app_link_lang
         $get_langs_req = "SELECT id_prog_lang FROM app_link_lang WHERE id_app = :id_app";
         $get_langs_stmt = $db->prepare($get_langs_req);
         $get_langs_stmt->execute([':id_app' => $id_app]);
@@ -367,12 +361,10 @@ function update_database($fields_data, $login) {
         $update_app_stmt = $db->prepare($update_app_req);
         $update_app_stmt->execute($update_params);
 
-        // Удаление всех связей программных языков для текущей заявки
         $del_links_req = "DELETE FROM app_link_lang WHERE id_app = :id_app";
         $del_links_stmt = $db->prepare($del_links_req);
         $del_links_stmt->execute([':id_app' => $id_app]);
 
-        // Вставка новых связей программных языков
         $link_req = "INSERT INTO app_link_lang (id_app, id_prog_lang) VALUES ";
         $data_for_link = [];
         foreach ($fields_data["langs"] as $lang) {
@@ -459,7 +451,6 @@ function delete_user($login) {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
 
-        // Подготовленный запрос для поиска пользователя
         $find_user_req = "SELECT application_id FROM users WHERE login = :login";
         $find_user_stmt = $db->prepare($find_user_req);
         $find_user_stmt->execute([':login' => $login]);
@@ -468,7 +459,6 @@ function delete_user($login) {
         if ($user_result) {
             $application_id = $user_result['application_id'];
 
-            // Подготовленный запрос для удаления пользователя из application
             $delete_user_req = "DELETE FROM application WHERE id_app = :application_id";
             $delete_user_stmt = $db->prepare($delete_user_req);
             $delete_user_stmt->execute([':application_id' => $application_id]);
@@ -476,4 +466,14 @@ function delete_user($login) {
     } catch (PDOException $e) {
         print_error($e->getMessage());
     }
+}
+
+function masking_data($data) {
+    $all_names = ["fio", "telephone", "email", "bday", "biography", "contract"];
+    $new_data = ['langs' => $data['langs'], 'sex' => $data['sex']];
+    foreach ($all_names as $name) {
+        $data_field = htmlspecialchars($data[$name], ENT_QUOTES, 'UTF-8');
+        $new_data[$name] = $data_field;
+    }
+    return $new_data;
 }

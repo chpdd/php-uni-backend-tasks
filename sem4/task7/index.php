@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', 'php_error.log');
+
 include("functions.php");
 session_start();
 
@@ -40,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         validate_data($fields_data);
+        $fields_data = masking_data($fields_data);
         $ed_login = $_SESSION['ed_login'];
         update_database($fields_data, $ed_login);
         header("Location:" . parse_url($_SERVER['REQUEST_URI'])['path'] . "?success_flag=True&user={$ed_login}");
@@ -82,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         validate_data($fields_data);
+        $fields_data = masking_data($fields_data);
         $_SESSION['session_active'] = true;
         $login = "user_" . random_int(0, 99999);
         $password = generate_password();
@@ -102,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         validate_data($fields_data);
+        $fields_data = masking_data($fields_data);
         $login = $_SESSION['login'];
         update_database($fields_data, $login);
         header("Location:" . parse_url($_SERVER['REQUEST_URI'])['path'] . "?success_flag=True");

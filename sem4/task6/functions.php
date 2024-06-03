@@ -123,7 +123,7 @@ function validate_data($data)
     $all_langs = range(0, 10);
     $all_sexs = ['man', 'woman'];
     $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography", "contract"];
-    $re_patterns = ['fio' => '/^[\w\sА-Яа-яЁё]+$/',
+    $re_patterns = ['fio' => '/^[\w\sА-Яа-яЁё]+$/u',
         'telephone' => '/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/',
         'email' => '/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$/'];
     $size_limits = ['fio' => 255, 'email' => 255, 'biography' => 512];
