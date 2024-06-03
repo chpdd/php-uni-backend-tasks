@@ -1,4 +1,5 @@
 <?php
+$csrf_token = $_SESSION['csrf_token'];
 $ed_login = $_GET['user'];
 $_SESSION['ed_login'] = $ed_login;
 $all_names = ["fio", "telephone", "email", "bday", "sex", "langs", "biography"];
@@ -80,6 +81,7 @@ foreach ($all_names as $name) {
                     <p class="success-color">Данные успешно изменены, спасибо!</p>
                 </div>
             <?php endif; ?>
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
             <?php echo_form($all_names, $fields_data, $errors); ?>
             <div class="label-center">
                 <input id="contract" type="checkbox" name="contract" value="1">

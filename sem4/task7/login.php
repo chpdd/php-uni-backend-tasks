@@ -1,4 +1,5 @@
 <?php
+$csrf_token = $_SESSION['csrf_token'];
 $authorization_errors = [];
 if (isset($_GET['error_authorization_flag'])) {
     $error_authorization_flag = true;
@@ -53,6 +54,7 @@ if (isset($_GET['error_authorization_flag'])) {
             </div>
         <?php endif; ?>
         <form name="login-form" id="login-form" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
             <div class="div-input">
                 <label id="for-login" class="black label-center" for="login">Логин</label>
                 <input name="login" class="size-input" id="login" type="text">
